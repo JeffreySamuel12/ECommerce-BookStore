@@ -6,7 +6,7 @@ import com.example.BookStoreApplication.model.User;
 
 import java.util.List;
 
-public interface UserService_interface {
+public interface UserServiceInterface {
     public  abstract UserDTO registerUser(User user);
 
     public abstract String login(LoginDTO loginDTO);

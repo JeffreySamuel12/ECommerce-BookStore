@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserService_interface {
+public class UserService implements UserServiceInterface {
     @Autowired
     private UserRepository userRepository;
 
