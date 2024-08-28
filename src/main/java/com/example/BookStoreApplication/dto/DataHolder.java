@@ -1,4 +1,4 @@
-package com.example.BookStoreApplication.user_dto;
+package com.example.BookStoreApplication.dto;
 
 
 import lombok.AllArgsConstructor;

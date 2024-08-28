@@ -2,7 +2,7 @@ package com.example.BookStoreApplication.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.BookStoreApplication.user_dto.DataHolder;
+import com.example.BookStoreApplication.dto.DataHolder;
 
 public class TokenUtility {
     private final String SECRET = "09876543211234567890";
