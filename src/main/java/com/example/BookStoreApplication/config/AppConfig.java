@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
     @Bean
-    public TokenUtility tokenUtility(){
+    public TokenUtility tokenUtility() {
         return new TokenUtility();
     }
 }

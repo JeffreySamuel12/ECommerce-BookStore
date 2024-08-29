@@ -37,22 +37,21 @@ public class UserService implements UserServiceInterface {
         System.out.println(userEmail);
         System.out.println(userPassword);
         User check = userRepository.findByemailId(userEmail);
-        System.out.println(check.getId());
+        System.out.println(check.getUserId());
         if (userEmail.equals(check.getEmailId()) && (userPassword.equals(check.getPassword()))) {
-            String token = tokenUtility.getToken(check.getId(), check.getRole());
+            String token = tokenUtility.getToken(check.getUserId(), check.getRole());
             return token;
         }
         throw new RuntimeException("User or password invalid!");
     }
 
     public List<UserDTO> getAllUsers(String token) {
-        DataHolder dataHolder=tokenUtility.decode(token);
-        if(dataHolder.getRole().equals("ADMIN")){
+        DataHolder dataHolder = tokenUtility.decode(token);
+        if (dataHolder.getRole().equals("ADMIN")) {
             return userRepository.findAll().stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList());
-        }
-        else{
+        } else {
             throw new RuntimeException("Access denied for the user");
         }
     }
@@ -64,7 +63,7 @@ public class UserService implements UserServiceInterface {
     public UserDTO updateUser(String token, UserDTO userDTO) {
         DataHolder dataHolder = tokenUtility.decode(token);
         if (dataHolder.getId().equals(userDTO.getId())) {
-            User user=userRepository.findById(dataHolder.getId()).orElseThrow(()->new RuntimeException("User not found"));
+            User user = userRepository.findById(dataHolder.getId()).orElseThrow(() -> new RuntimeException("User not found"));
             user.setFirstName(userDTO.getFirstName());
             user.setLastName(userDTO.getLastName());
             user.setDob(userDTO.getDob());
@@ -80,14 +79,14 @@ public class UserService implements UserServiceInterface {
     }
 
     public void deleteUser(String token) {
-        DataHolder dataHolder=tokenUtility.decode(token);
-        User user=userRepository.findById(dataHolder.getId()).orElseThrow(()->new RuntimeException("User not found"));
+        DataHolder dataHolder = tokenUtility.decode(token);
+        User user = userRepository.findById(dataHolder.getId()).orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user);
     }
 
     public UserDTO convertToDTO(@Valid User user) {
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
+        userDTO.setId(user.getUserId());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
         userDTO.setDob(user.getDob());

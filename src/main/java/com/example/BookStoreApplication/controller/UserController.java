@@ -19,12 +19,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public UserDTO registerUser(@RequestBody User user){
-        return  userService.registerUser(user);
+    public UserDTO registerUser(@RequestBody User user) {
+        return userService.registerUser(user);
     }
 
     @GetMapping
-    public List<UserDTO> getAllUsers(@RequestHeader String token){
+    public List<UserDTO> getAllUsers(@RequestHeader String token) {
         return userService.getAllUsers(token);
     }
 
@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public UserDTO updateUserByToken(@RequestHeader String token,@RequestBody UserDTO userDTO){
-        return userService.updateUser(token,userDTO);
+    public UserDTO updateUserByToken(@RequestHeader String token, @RequestBody UserDTO userDTO) {
+        return userService.updateUser(token, userDTO);
     }
 
     @DeleteMapping("/delete")
@@ -45,13 +45,13 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login(@RequestBody LoginDTO loginDTO){
-        String s=userService.login(loginDTO);
+    public String login(@RequestBody LoginDTO loginDTO) {
+        String s = userService.login(loginDTO);
         return s;
     }
 
     @GetMapping("/GetByToken")
-    public UserDTO getByToken(@RequestHeader String token){
+    public UserDTO getByToken(@RequestHeader String token) {
         return userService.getByToken(token);
     }
 }
