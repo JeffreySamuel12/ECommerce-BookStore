@@ -5,77 +5,73 @@ import com.example.BookStoreApplication.model.Book;
 import com.example.BookStoreApplication.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BookService {
-
     @Autowired
     private BookRepository bookRepository;
 
+
     public Book addBook(BookDTO bookDTO) {
-        Book book = convertToEntity(bookDTO);
-        return bookRepository.save(book);
+        System.out.println("Adding book: " + bookDTO);
+        Book newBook = new Book(bookDTO);
+        Book savedBook = bookRepository.save(newBook);
+        System.out.println("Saved book: " + savedBook);
+        return savedBook;
     }
 
-    public List<BookDTO> getAllBooks() {
-        List<Book> books = bookRepository.findAll();
-        return books.stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
     }
 
-    public BookDTO getBookById(Long id) {
+    public Optional<Book> getBookById(Long id) {
+        return bookRepository.findById(id);
+    }
+
+    public Book updateBook(Long id, Book bookDetails) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
-        return convertToDTO(book);
-    }
-
-    public BookDTO updateBook(Long id, BookDTO bookDTO) {
-        Book bookDetails = convertToEntity(bookDTO);
-        Book updatedBook = bookRepository.save(bookDetails);
-        return convertToDTO(updatedBook);
+        book.setBookName(bookDetails.getBookName());
+        book.setBookAuthor(bookDetails.getBookAuthor());
+        book.setBookDescription(bookDetails.getBookDescription());
+//        book.setBookLogo(bookDetails.getBookLogo());
+        book.setBookPrice(bookDetails.getBookPrice());
+        book.setBookQuantity(bookDetails.getBookQuantity());
+        return bookRepository.save(book);
     }
 
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }
 
-    public BookDTO changeBookQuantity(Long id, int quantity) {
+    public Book changeBookQuantity(long id, int quantity) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
         book.setBookQuantity(quantity);
-        Book updatedBook = bookRepository.save(book);
-        return convertToDTO(updatedBook);
+        bookRepository.save(book);
+        return book;
     }
 
-    public BookDTO changeBookPrice(Long id, double price) {
+    public Book changeBookPrice(Long id, Double price) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
         book.setBookPrice(price);
-        Book updatedBook = bookRepository.save(book);
-        return convertToDTO(updatedBook);
+        return bookRepository.save(book);
     }
 
-    private BookDTO convertToDTO(Book book) {
-        return BookDTO.builder()
-                .id(book.getId())
-                .bookName(book.getBookName())
-                .bookAuthor(book.getBookAuthor())
-                .bookDescription(book.getBookDescription())
-                .bookLogo(book.getBookLogo())
-                .bookPrice(book.getBookPrice())
-                .bookQuantity(book.getBookQuantity())
-                .build();
+    public void saveFile(MultipartFile file) {
+        try {
+            Path path = Paths.get("uploads/" + file.getOriginalFilename());
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to store file", e);
+        }
     }
 
-    private Book convertToEntity(BookDTO bookDTO) {
-        return Book.builder()
-                .id(bookDTO.getId())
-                .bookName(bookDTO.getBookName())
-                .bookAuthor(bookDTO.getBookAuthor())
-                .bookDescription(bookDTO.getBookDescription())
-                .bookLogo(bookDTO.getBookLogo())
-                .bookPrice(bookDTO.getBookPrice())
-                .bookQuantity(bookDTO.getBookQuantity())
-                .build();
-    }
+
 }
