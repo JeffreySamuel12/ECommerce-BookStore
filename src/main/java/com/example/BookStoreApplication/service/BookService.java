@@ -40,7 +40,7 @@ public class BookService {
         book.setBookName(bookDetails.getBookName());
         book.setBookAuthor(bookDetails.getBookAuthor());
         book.setBookDescription(bookDetails.getBookDescription());
-        book.setBookLogo(bookDetails.getBookLogo());
+//        book.setBookLogo(bookDetails.getBookLogo());
         book.setBookPrice(bookDetails.getBookPrice());
         book.setBookQuantity(bookDetails.getBookQuantity());
         return bookRepository.save(book);
@@ -50,10 +50,11 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public Book changeBookQuantity(Long id, Integer quantity) {
+    public Book changeBookQuantity(long id, int quantity) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
         book.setBookQuantity(quantity);
-        return bookRepository.save(book);
+        bookRepository.save(book);
+        return book;
     }
 
     public Book changeBookPrice(Long id, Double price) {
@@ -71,4 +72,6 @@ public class BookService {
             throw new RuntimeException("Failed to store file", e);
         }
     }
+
+
 }

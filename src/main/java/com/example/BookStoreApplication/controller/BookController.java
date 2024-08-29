@@ -36,10 +36,8 @@ public class BookController {
     }
 
     @PutMapping("/update/{id}")
-    public BookDTO updateBook(@PathVariable Long id, @RequestPart("book") BookDTO bookDTO, @RequestPart("file") MultipartFile file) {
-        Book bookDetails = convertToEntity(bookDTO);
-        bookDetails.setBookLogo(file.getOriginalFilename()); // Save the file name
-        bookService.saveFile(file); // Save the file to a directory
+    public BookDTO updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
+        Book bookDetails = convertToEntity(bookDTO);// Save the file name
         Book updatedBook = bookService.updateBook(id, bookDetails);
         return convertToDTO(updatedBook);
     }
@@ -49,14 +47,15 @@ public class BookController {
         bookService.deleteBook(id);
     }
 
-    @PutMapping("/changeQuantity/{id}")
-    public BookDTO changeBookQuantity(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestParam Integer quantity) {
+    @PutMapping("/changeQuantity/{id}/{quantity}")
+    public BookDTO changeBookQuantity(@RequestHeader("Authorization") String token, @PathVariable long id, @PathVariable int quantity) {
         Book updatedBook = bookService.changeBookQuantity(id, quantity);
+
         return convertToDTO(updatedBook);
     }
 
-    @PutMapping("/changePrice/{id}")
-    public BookDTO changeBookPrice(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestParam Double price) {
+    @PutMapping("/changePrice/{id}/{price}")
+    public BookDTO changeBookPrice(@RequestHeader("Authorization") String token, @PathVariable long id, @PathVariable double price) {
         Book updatedBook = bookService.changeBookPrice(id, price);
         return convertToDTO(updatedBook);
     }
