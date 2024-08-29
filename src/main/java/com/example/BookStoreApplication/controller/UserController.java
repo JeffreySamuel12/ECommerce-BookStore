@@ -50,7 +50,7 @@ public class UserController {
         return s;
     }
 
-    @GetMapping("/GetByToken")
+    @GetMapping("/GetUserByToken")
     public UserDTO getByToken(@RequestHeader String token){
         return userService.getByToken(token);
     }
