@@ -50,7 +50,7 @@ public class BookController {
     }
 
     @PutMapping("/changeQuantity/{id}")
-    public BookDTO changeBookQuantity(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestParam Integer quantity) {
+    public BookDTO changeBookQuantity(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestParam Long quantity) {
         Book updatedBook = bookService.changeBookQuantity(id, quantity);
         return convertToDTO(updatedBook);
     }
@@ -62,26 +62,19 @@ public class BookController {
     }
 
     private BookDTO convertToDTO(Book book) {
-        return BookDTO.builder()
-                .id(book.getId())
-                .bookName(book.getBookName())
-                .bookAuthor(book.getBookAuthor())
-                .bookDescription(book.getBookDescription())
-                .bookLogo(book.getBookLogo())
-                .bookPrice(book.getBookPrice())
-                .bookQuantity(book.getBookQuantity())
-                .build();
+        BookDTO bookDTO=new BookDTO();
+        bookDTO.setId(book.getId());
+        bookDTO.setBookName(book.getBookName());
+        bookDTO.setBookAuthor(book.getBookAuthor());
+        bookDTO.setBookDescription(book.getBookDescription());
+        bookDTO.setBookLogo(book.getBookLogo());
+        bookDTO.setBookPrice(book.getBookPrice());
+        bookDTO.setBookQuantity(book.getBookQuantity());
+        return bookDTO;
     }
 
     private Book convertToEntity(BookDTO bookDTO) {
-        return Book.builder()
-                .id(bookDTO.getId())
-                .bookName(bookDTO.getBookName())
-                .bookAuthor(bookDTO.getBookAuthor())
-                .bookDescription(bookDTO.getBookDescription())
-                .bookLogo(bookDTO.getBookLogo())
-                .bookPrice(bookDTO.getBookPrice())
-                .bookQuantity(bookDTO.getBookQuantity())
-                .build();
+        Book book=new Book(bookDTO);
+        return book;
     }
 }

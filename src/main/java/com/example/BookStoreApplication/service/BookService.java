@@ -50,7 +50,7 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public Book changeBookQuantity(Long id, Integer quantity) {
+    public Book changeBookQuantity(Long id, Long quantity) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
         book.setBookQuantity(quantity);
         return bookRepository.save(book);
