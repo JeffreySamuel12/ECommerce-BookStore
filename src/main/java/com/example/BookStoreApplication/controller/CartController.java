@@ -20,9 +20,8 @@ public class CartController {
      * @param bookId to find which book details has to be added for creation of cart
      * @return returns the responseEntity which holds the UserDTO object with the response code
      */
-    @PostMapping("/addtocart/{bookId}")
+    @PostMapping("/addToCart/{bookId}")
     public ResponseEntity<?> addToCart(@RequestHeader String token, @PathVariable long bookId) {
-        System.out.println("atleast");
         return cartService.addToCart(token, bookId);
     }
 
@@ -31,7 +30,7 @@ public class CartController {
      * @param cartId helps to find which tuple has to be deleted
      * @return returns the Respnse Entity holding a string along with the response code.
      */
-    @DeleteMapping("/deletecartbyid/{cartId}")
+    @DeleteMapping("/deleteCartById/{cartId}")
     public ResponseEntity<?> deleteCartById(@PathVariable long cartId) {
         return cartService.deleteCartById(cartId);
     }
@@ -43,7 +42,7 @@ public class CartController {
      * @param token is taken to identify the user who is accessing the api can delete his cart
      * @return contains responseEntity  having String message with the response status.
      */
-    @DeleteMapping("/removebyuserid")
+    @DeleteMapping("/removeByUserid")
     public ResponseEntity<?> removeByUserId(@RequestHeader String token) {
         return cartService.removeByUserId(token);
     }
@@ -57,7 +56,7 @@ public class CartController {
      * @param quantity to update the quantity of the book from previous amount to quantity value mentioned
      * @return returns the ResponseEntity with the CartDTO object with the response status
      */
-    @PutMapping("/updatequantity/{cartId}/{quantity}")
+    @PutMapping("/updateQuantity/{cartId}/{quantity}")
     public ResponseEntity<?> updateQuantity(@RequestHeader String token, @PathVariable long cartId, @PathVariable int quantity) {
         return cartService.updateQuantity(token, cartId, quantity);
     }
@@ -68,7 +67,7 @@ public class CartController {
      * @param token used to get the information of who the user is accessing the API
      * @return returns the ResponseEntity with the list of all CartDTO object along with the response status
      */
-    @GetMapping("/getallcartofuser")
+    @GetMapping("/getAllCartOfUser")
     public ResponseEntity<?> getAllCartItemsForUser(@RequestHeader String token) {
         return cartService.getAllCartItemsForUser(token);
     }
@@ -78,7 +77,7 @@ public class CartController {
      * @param token it is used to identify the users role , which helps us to allow access of getting all the cart items only to the admin user.
      * @return returns the ResponseEntity with List of CartDTO objects along with the response status
      */
-    @GetMapping("/getallcartitems")
+    @GetMapping("/getAllcartItems")
     public ResponseEntity<?> getAllCartItems(@RequestHeader String token) {
         return cartService.getAllCartItems(token);
     }

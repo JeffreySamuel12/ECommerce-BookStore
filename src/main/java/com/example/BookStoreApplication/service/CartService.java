@@ -3,6 +3,9 @@ package com.example.BookStoreApplication.service;
 
 import com.example.BookStoreApplication.dto.CartDTO;
 import com.example.BookStoreApplication.dto.DataHolder;
+import com.example.BookStoreApplication.exception.CartIdNotFoundException;
+import com.example.BookStoreApplication.exception.ExceededStockException;
+import com.example.BookStoreApplication.exception.NoPermissionFoundException;
 import com.example.BookStoreApplication.exception.UserNotFoundException;
 import com.example.BookStoreApplication.model.Book;
 import com.example.BookStoreApplication.model.Cart;
@@ -55,7 +58,6 @@ public class CartService implements CartServiceInterface {
 
 
     public ResponseEntity<CartDTO> addToCart(String token, long bookId) {
-        System.out.println("ha");
         DataHolder dataHolder = tokenUtility.decode(token);
         Long userId = dataHolder.getId();
         String role = dataHolder.getRole();
@@ -67,14 +69,30 @@ public class CartService implements CartServiceInterface {
         System.out.println("User found in the list");
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
         System.out.println("Book found in the list");
+
+        List<Cart> allCart=cartRepository.findAll();
+
+        for (Cart cartOfUserBook :allCart)
+        {
+            if (cartOfUserBook.getUser().getUserId().equals(userId) && cartOfUserBook.getBook().getBookId()==bookId )
+            {
+
+                return updateQuantity(token,cartOfUserBook.getCartId(),(int)cartOfUserBook.getQuantity()+1);
+
+            }
+        }
+
         Cart cart = new Cart();
         cart.setUser(user);
         cart.setBook(book);
-        cart.setQuantity(cart.getBook().getQuantity() + 1);
-        double totalPrice = book.getPrice() * cart.getBook().getQuantity();
+        cart.setQuantity(cart.getQuantity()+1);
+        double totalPrice = book.getPrice() * (double) (cart.getQuantity());
         cart.setTotalPrice(totalPrice);
         cartRepository.save(cart);
+
         return new ResponseEntity<>(convertEntityToDTO(cart), HttpStatus.CREATED);
+
+
 
     }
 
@@ -86,7 +104,7 @@ public class CartService implements CartServiceInterface {
             cartRepository.deleteById(cartId);
             return new ResponseEntity<>("Cart entity deleted Succesfully", HttpStatus.OK);
         } else {
-            throw new UserNotFoundException("Cart id Not Found...");
+            throw new CartIdNotFoundException("Cart id Not Found...");
         }
 
 
@@ -101,7 +119,7 @@ public class CartService implements CartServiceInterface {
         List<Cart> carts = cartRepository.findAll();
         if (carts.isEmpty()) {
             System.out.println("not matching cart items found for the user.");
-            throw new UserNotFoundException("Cart items for the user not found..");
+            throw new CartIdNotFoundException("Cart items for the user not found..");
         }
         for (Cart items : carts) {
             if (items.getUser().getUserId() == userId) {
@@ -125,14 +143,18 @@ public class CartService implements CartServiceInterface {
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         if (optionalCart.isPresent()) {
             Cart cart = optionalCart.get();
+
+            if (cart.getBook().getQuantity()<quantity)
+                throw new ExceededStockException("The amount of books requested is exeeding the stock of the book available at current");
+
             cart.setQuantity(quantity);
-            cart.setTotalPrice((long) (cart.getBook().getPrice() * (long) quantity));
+            cart.setTotalPrice( (cart.getBook().getPrice() * (double) quantity));
             cartRepository.save(cart);
             CartDTO cartDTO = convertEntityToDTO(cart);
             return new ResponseEntity<>(cartDTO, HttpStatus.OK);
 
         } else {
-            throw new UserNotFoundException("cart empty for the user");
+            throw new CartIdNotFoundException("could not find the cart");
         }
 
 
@@ -174,7 +196,7 @@ public class CartService implements CartServiceInterface {
 
             return new ResponseEntity<>(allUser, HttpStatus.OK);
         } else {
-            throw new UserNotFoundException("You does not have proper permissions to view it .");
+            throw new NoPermissionFoundException("You does not have proper permissions to view it .");
         }
 
     }
