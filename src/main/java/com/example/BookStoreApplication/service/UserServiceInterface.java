@@ -7,21 +7,21 @@ import com.example.BookStoreApplication.model.User;
 import java.util.List;
 
 public interface UserServiceInterface {
-    public  abstract UserDTO registerUser(User user);
 
-    public abstract String login(LoginDTO loginDTO);
+    public UserDTO registerUser(User user);
 
-    public abstract List<UserDTO> getAllUsers(String token);
+    public String login(LoginDTO loginDTO);
 
-    public abstract UserDTO getUserById(String token);
+    public List<UserDTO> getAllUsers(String token);
 
-    public abstract UserDTO updateUser(String token, UserDTO userDTO);
+    public UserDTO getUserById(String token);
 
-    public abstract void deleteUser(String token);
+    public UserDTO updateUser(String token, UserDTO userDTO);
 
-    public abstract UserDTO convertToDTO(User user);
+    public void deleteUser(String token);
 
-    public abstract UserDTO getByToken(String token);
+    public UserDTO convertToDTO(User user);
 
+    public UserDTO getByToken(String token);
 
 }

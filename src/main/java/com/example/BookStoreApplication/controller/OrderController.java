@@ -3,7 +3,6 @@ package com.example.BookStoreApplication.controller;
 import com.example.BookStoreApplication.dto.OrderDTO;
 import com.example.BookStoreApplication.model.Order;
 import com.example.BookStoreApplication.service.OrderService;
-import com.example.BookStoreApplication.service.OrderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ import java.util.List;
 public class OrderController {
 
     @Autowired
-    private OrderServiceInterface orderService;
+    private OrderService orderService;
 
     /**
      * Purpose: Place a new order.

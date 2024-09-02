@@ -20,7 +20,6 @@ public class ImageService {
     @Autowired
     TokenUtility tokenUtility;
 
-
     private void checkDuplication(MultipartFile logo)
     {
         if(logo.getOriginalFilename()=="")

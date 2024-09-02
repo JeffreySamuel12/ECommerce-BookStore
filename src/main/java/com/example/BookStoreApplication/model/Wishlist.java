@@ -23,4 +23,27 @@ public class Wishlist {
     @JoinColumn(name="userId")
     private User user;
 
+    public long getWishlistId() {
+        return wishlistId;
+    }
+
+    public void setWishlistId(long wishlistId) {
+        this.wishlistId = wishlistId;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

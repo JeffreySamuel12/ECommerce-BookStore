@@ -5,13 +5,11 @@ import com.example.BookStoreApplication.model.Book;
 import com.example.BookStoreApplication.model.Feedback;
 import com.example.BookStoreApplication.repository.BookRepository;
 import com.example.BookStoreApplication.repository.FeedbackRepository;
-import com.example.BookStoreApplication.repository.UserRepository;
 import com.example.BookStoreApplication.util.TokenUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class FeedbackService {
 
     public ResponseEntity<String> addFeedback(String token,Long productId, Feedback feedback) {
         DataHolder dataHolder=tokenUtility.decode(token);
-        if(dataHolder.getRole().equals("User")) {
+        if(dataHolder.getRole().equalsIgnoreCase("User")) {
             Book book = bookRepository.findById(productId).orElse(null);
             if (book != null) {
                 feedback.setProduct_id(productId);
@@ -46,7 +44,7 @@ public class FeedbackService {
 
     public ResponseEntity<?> getAllFeedbacks(String token) {
         DataHolder dataHolder=tokenUtility.decode(token);
-        if(dataHolder.getRole().equals("ADMIN")){
+        if(dataHolder.getRole().equalsIgnoreCase("ADMIN")){
             return new ResponseEntity<>(feedbackRepository.findAll(),HttpStatus.OK);
         }
         else{
@@ -69,7 +67,6 @@ public class FeedbackService {
             return new ResponseEntity<>("Product not found",HttpStatus.NOT_FOUND);
         }
     }
-
 
     public ResponseEntity<?> updateFeedbackById(Long feedbackId,Feedback update_feedback) {
         Feedback feedback=feedbackRepository.findById(feedbackId).orElseThrow(()->new RuntimeException("Feedback not found for this Id"));

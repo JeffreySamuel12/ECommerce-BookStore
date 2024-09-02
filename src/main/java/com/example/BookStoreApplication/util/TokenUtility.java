@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.BookStoreApplication.dto.DataHolder;
 
 public class TokenUtility {
+
     private final String SECRET = "09876543211234567890";
 
     public String getToken(Long id, String role) {

@@ -16,7 +16,7 @@ public class WishlistController {
      * Purpose: This API is created for adding a product based on the bookId to the wishlist
      * @param token used to find the user accessing the API
      * @param bookId used to find which product is being added to the wishlist
-     * @return returns RespnseEnitity which holds the WishlistDTO object along with the response code
+     * @return returns ResponseEntity which holds the WishlistDTO object along with the response code
      */
     @PostMapping("/add/{bookId}")
     public ResponseEntity<?> addToWishlist(@RequestHeader String token, @PathVariable long bookId)
@@ -49,7 +49,6 @@ public class WishlistController {
         return wishlistService.getAllWishlist(token);
     }
 
-
     /**
      * Retrieves the wishlist items for the authenticated user.
      *
@@ -61,6 +60,4 @@ public class WishlistController {
     {
         return wishlistService.getUserWishlist(token);
     }
-
-
 }

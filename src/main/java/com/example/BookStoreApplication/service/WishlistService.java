@@ -2,7 +2,7 @@ package com.example.BookStoreApplication.service;
 
 import com.example.BookStoreApplication.dto.DataHolder;
 import com.example.BookStoreApplication.dto.WishlistDTO;
-import com.example.BookStoreApplication.exception.AldreadyAddedException;
+import com.example.BookStoreApplication.exception.AlreadyAddedException;
 import com.example.BookStoreApplication.exception.NoPermissionFoundException;
 import com.example.BookStoreApplication.exception.UserNotFoundException;
 import com.example.BookStoreApplication.model.Book;
@@ -34,12 +34,13 @@ public class WishlistService implements WishlistServiceInterface{
     @Autowired
     private TokenUtility tokenUtility;
 
-    private boolean checkAvailability(Book book)
-    {
-        if(book.getQuantity()>0)
+    private boolean checkAvailability(Book book) {
+        if(book.getBookQuantity() > 0) {
             return true;
-        else
+        }
+        else {
             return false;
+        }
     }
 
     public WishlistDTO convertWishlistToDTO(Wishlist wishlist)
@@ -47,18 +48,16 @@ public class WishlistService implements WishlistServiceInterface{
         WishlistDTO wishlistDTO = new WishlistDTO();
         wishlistDTO.setWishlistId(wishlist.getWishlistId());
         wishlistDTO.setUserId(wishlist.getUser().getUserId());
-        wishlistDTO.setBookId(wishlist.getBook().getBookId());
+        wishlistDTO.setBookId(wishlist.getBook().getId());
         wishlistDTO.setBookName(wishlist.getBook().getBookName());
-        wishlistDTO.setPrice(wishlist.getBook().getPrice());
+        wishlistDTO.setPrice(wishlist.getBook().getBookPrice());
         wishlistDTO.setAvailability(checkAvailability(wishlist.getBook()));
 
         return wishlistDTO;
     }
 
-
     public ResponseEntity<WishlistDTO> addToWishlist(String token, long bookId)
     {
-        System.out.println("hs");
         DataHolder dataHolder = tokenUtility.decode(token);
         Long userId = dataHolder.getId();
 
@@ -72,9 +71,9 @@ public class WishlistService implements WishlistServiceInterface{
 
         for(Wishlist item:wishlists)
         {
-            if (item.getUser().getUserId().equals(userId) && item.getBook().getBookId()==bookId )
+            if (item.getUser().getUserId().equals(userId) && item.getBook().getId().equals(bookId) )
             {
-                throw new AldreadyAddedException("Aldready added to wishlist");
+                throw new AlreadyAddedException("Already added to wishlist");
             }
         }
 
@@ -84,16 +83,14 @@ public class WishlistService implements WishlistServiceInterface{
 
         wishlistRepository.save(wishlist);
         return  new ResponseEntity<>(convertWishlistToDTO(wishlist), HttpStatus.CREATED);
-
     }
 
     public ResponseEntity<List<WishlistDTO>> getAllWishlist(String token)
     {
         DataHolder dataHolder = tokenUtility.decode(token);
-        long userId = dataHolder.getId();
         String role = dataHolder.getRole();
 
-        if (role.equals("admin"))
+        if (role.equalsIgnoreCase("admin"))
         {
             List<Wishlist> wishlists = wishlistRepository.findAll();
             List<WishlistDTO> allUsers= new ArrayList<>();
@@ -105,63 +102,54 @@ public class WishlistService implements WishlistServiceInterface{
 
             return new ResponseEntity<>(allUsers,HttpStatus.OK);
         }
-        else
+        else {
             throw new NoPermissionFoundException("You does not have proper permission to view it ");
+        }
     }
 
-
     public ResponseEntity<String> deleteFromWishlist(String token, long wishlistId)
-   {
-       DataHolder dataHolder = tokenUtility.decode(token);
-       Long userId = dataHolder.getId();
-       if (userRepository.findById(userId).isPresent())
-       {
-           System.out.println("User found");
-           List<Wishlist> allWishlist= wishlistRepository.findAll();
+    {
+        DataHolder dataHolder = tokenUtility.decode(token);
+        Long userId = dataHolder.getId();
+        if (userRepository.findById(userId).isPresent()) {
+            System.out.println("User found");
+            List<Wishlist> allWishlist= wishlistRepository.findAll();
 
-           for(Wishlist item: allWishlist)
-           {
-               if (item.getWishlistId()==wishlistId)
-               {
-                   wishlistRepository.delete(item);
-                   System.out.println("Deleted"+ item);
-                   return new ResponseEntity<>("Deleted the book from the whishlist of the user",HttpStatus.OK);
-               }
-           }
+            for(Wishlist item: allWishlist)
+            {
+                if (item.getWishlistId()==wishlistId)
+                {
+                    wishlistRepository.delete(item);
+                    System.out.println("Deleted"+ item);
+                    return new ResponseEntity<>("Deleted the book from the wishlist of the user",HttpStatus.OK);
+                }
+            }
+        }
+        else {
+            throw new UserNotFoundException("User not found");
+        }
+        return new ResponseEntity<>("Could not find the item to delete ",HttpStatus.NOT_FOUND);
+    }
 
-       }
-       else
-       {
-           throw new UserNotFoundException("User not found");
-       }
-       return new ResponseEntity<>("Could not find the item to delete ",HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<WishlistDTO>> getUserWishlist(String token)
+    {
+        DataHolder dataHolder = tokenUtility.decode(token);
+        long userId = dataHolder.getId();
 
-   }
+        User user =userRepository.findById(userId).orElseThrow(()->new UserNotFoundException("User not found"));
 
-   public ResponseEntity<List<WishlistDTO>> getUserWishlist(String token)
-   {
-       DataHolder dataHolder = tokenUtility.decode(token);
-       long userId = dataHolder.getId();
+        List<Wishlist> wishlists= wishlistRepository.findAll();
 
-       User user =userRepository.findById(userId).orElseThrow(()->new UserNotFoundException("User not found"));
+        List<WishlistDTO> userWishlist= new ArrayList<>();
 
-       List<Wishlist> wishlists= wishlistRepository.findAll();
+        for (Wishlist item: wishlists)
+        {
+            if (item.getUser().getUserId()==userId)
+            {
+                userWishlist.add(convertWishlistToDTO(item));
+            }
+        }
 
-       List<WishlistDTO> userWishlist= new ArrayList<>();
-
-       for (Wishlist item: wishlists)
-       {
-           if (item.getUser().getUserId()==userId)
-           {
-               userWishlist.add(convertWishlistToDTO(item));
-           }
-       }
-
-
-
-       return  new ResponseEntity<>(userWishlist,HttpStatus.OK);
-
-
-
-   }
+        return  new ResponseEntity<>(userWishlist,HttpStatus.OK);
+    }
 }

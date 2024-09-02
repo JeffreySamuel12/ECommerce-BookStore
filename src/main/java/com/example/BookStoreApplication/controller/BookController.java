@@ -16,9 +16,9 @@ public class BookController {
     private BookService bookService;
 
     @PostMapping("/add")
-    public Book addBook(@RequestBody BookDTO bookDTO) {
+    public Book addBook(@RequestHeader("Authorization") String token,@RequestBody BookDTO bookDTO) {
         System.out.println("Received request to add book: " + bookDTO);
-        return bookService.addBook(bookDTO);
+        return bookService.addBook(token,bookDTO);
     }
 
     @GetMapping("/all")
@@ -42,12 +42,12 @@ public class BookController {
     }
 
     @PutMapping("/changeQuantity/{id}/{quantity}")
-    public BookDTO changeBookQuantity(@RequestHeader("Authorization") String token, @PathVariable long id, @PathVariable int quantity) {
-        return bookService.changeBookQuantity(id, quantity);
+    public BookDTO changeBookQuantity(@RequestHeader("Authorization") String token, @PathVariable long id, @PathVariable long quantity) {
+        return bookService.changeBookQuantity(token,id, quantity);
     }
 
     @PutMapping("/changePrice/{id}/{price}")
     public BookDTO changeBookPrice(@RequestHeader("Authorization") String token, @PathVariable long id, @PathVariable double price) {
-        return bookService.changeBookPrice(id, price);
+        return bookService.changeBookPrice(token,id, price);
     }
 }

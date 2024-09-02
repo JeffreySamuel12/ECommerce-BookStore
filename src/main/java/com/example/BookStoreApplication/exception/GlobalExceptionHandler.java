@@ -40,9 +40,9 @@ public class GlobalExceptionHandler {
         return  new ResponseEntity<>(noPermissionFoundException.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AldreadyAddedException.class)
-    public ResponseEntity<?> AldreadyAddedException(AldreadyAddedException aldreadyAddedException){
-        return  new ResponseEntity<>(aldreadyAddedException.getMessage(),HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(AlreadyAddedException.class)
+    public ResponseEntity<?> AlreadyAddedException(AlreadyAddedException alreadyAddedException){
+        return  new ResponseEntity<>(alreadyAddedException.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ExceededStockException.class)

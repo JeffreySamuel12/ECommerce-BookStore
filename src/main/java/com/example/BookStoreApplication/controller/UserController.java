@@ -6,7 +6,6 @@ import com.example.BookStoreApplication.model.User;
 import com.example.BookStoreApplication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
@@ -45,8 +45,8 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(@RequestBody LoginDTO loginDTO){
-        String s=userService.login(loginDTO);
-        return s;
+        String token=userService.login(loginDTO);
+        return token;
     }
 
     @GetMapping("/GetUserByToken")

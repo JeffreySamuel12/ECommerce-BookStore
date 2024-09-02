@@ -1,13 +1,14 @@
 package com.example.BookStoreApplication.service;
 
 import com.example.BookStoreApplication.dto.BookDTO;
+import com.example.BookStoreApplication.dto.DataHolder;
 import com.example.BookStoreApplication.model.Book;
 import com.example.BookStoreApplication.repository.BookRepository;
+import com.example.BookStoreApplication.util.TokenUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,9 +17,18 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    public Book addBook(BookDTO bookDTO) {
-        Book book = convertToEntity(bookDTO);
-        return bookRepository.save(book);
+    @Autowired
+    private TokenUtility tokenUtility;
+
+    public Book addBook(String token,BookDTO bookDTO) {
+        DataHolder dataHolder=tokenUtility.decode(token);
+        if(dataHolder.getRole().equalsIgnoreCase("ADMIN")) {
+            Book book = convertToEntity(bookDTO);
+            return bookRepository.save(book);
+        }
+        else{
+            throw new RuntimeException("Access denied");
+        }
     }
 
     public List<BookDTO> getAllBooks() {
@@ -41,41 +51,46 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public BookDTO changeBookQuantity(Long id, int quantity) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
-        book.setBookQuantity(quantity);
-        Book updatedBook = bookRepository.save(book);
-        return convertToDTO(updatedBook);
+    public BookDTO changeBookQuantity(String token,Long id,Long quantity) {
+        DataHolder dataHolder=tokenUtility.decode(token);
+        if(dataHolder.getRole().equalsIgnoreCase("ADMIN")) {
+            Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
+            book.setBookQuantity(quantity);
+            Book updatedBook = bookRepository.save(book);
+            return convertToDTO(updatedBook);
+        }
+        else{
+            throw new RuntimeException("Access denied");
+        }
     }
 
-    public BookDTO changeBookPrice(Long id, double price) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
-        book.setBookPrice(price);
-        Book updatedBook = bookRepository.save(book);
-        return convertToDTO(updatedBook);
+    public BookDTO changeBookPrice(String token,Long id, double price) {
+        DataHolder dataHolder=tokenUtility.decode(token);
+        if(dataHolder.getRole().equalsIgnoreCase("ADMIN")) {
+            Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
+            book.setBookPrice(price);
+            Book updatedBook = bookRepository.save(book);
+            return convertToDTO(updatedBook);
+        }
+        else{
+            throw new RuntimeException("Access denied");
+        }
     }
 
     private BookDTO convertToDTO(Book book) {
-        return BookDTO.builder()
-                .id(book.getId())
-                .bookName(book.getBookName())
-                .bookAuthor(book.getBookAuthor())
-                .bookDescription(book.getBookDescription())
-                .bookLogo(book.getBookLogo())
-                .bookPrice(book.getBookPrice())
-                .bookQuantity(book.getBookQuantity())
-                .build();
+        BookDTO bookDTO=new BookDTO();
+        bookDTO.setBookId(book.getId());
+        bookDTO.setBookName(book.getBookName());
+        bookDTO.setBookAuthor(book.getBookAuthor());
+        bookDTO.setBookDescription(book.getBookDescription());
+        bookDTO.setBookLogo(book.getBookLogo());
+        bookDTO.setBookPrice(book.getBookPrice());
+        bookDTO.setBookQuantity(book.getBookQuantity());
+        return bookDTO;
     }
 
     private Book convertToEntity(BookDTO bookDTO) {
-        return Book.builder()
-                .id(bookDTO.getId())
-                .bookName(bookDTO.getBookName())
-                .bookAuthor(bookDTO.getBookAuthor())
-                .bookDescription(bookDTO.getBookDescription())
-                .bookLogo(bookDTO.getBookLogo())
-                .bookPrice(bookDTO.getBookPrice())
-                .bookQuantity(bookDTO.getBookQuantity())
-                .build();
+        Book book=new Book(bookDTO);
+        return book;
     }
 }

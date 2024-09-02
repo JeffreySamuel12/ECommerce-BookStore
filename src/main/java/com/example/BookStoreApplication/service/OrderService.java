@@ -79,15 +79,15 @@ public class OrderService implements OrderServiceInterface{
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        if (!userId.equals(order.getUser().getId())) {
+        if (!userId.equals(order.getUser().getUserId())) {
             throw new RuntimeException("User not authorized to cancel this order");
         }
 
-        if (!order.getShipmentStatus().equals("placed")) {
+        if (!order.getShipmentStatus().equalsIgnoreCase("placed")) {
             throw new RuntimeException("Order cannot be cancelled as it is already " + order.getShipmentStatus());
         }
 
-        if (order.getShipmentStatus().equals("delivered")) {
+        if (order.getShipmentStatus().equalsIgnoreCase("delivered")) {
             throw new RuntimeException("Order cannot be cancelled as it is already " + order.getShipmentStatus());
         }
 
@@ -105,7 +105,7 @@ public class OrderService implements OrderServiceInterface{
     @Override
     public ResponseEntity<List<Order>> getAllOrders(String token) {
         DataHolder dataHolder=tokenUtility.decode(token);
-        if(dataHolder.getRole().equals("ADMIN")) {
+        if(dataHolder.getRole().equalsIgnoreCase("ADMIN")) {
             List<Order> orders = orderRepository.findAll();
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
@@ -124,7 +124,7 @@ public class OrderService implements OrderServiceInterface{
     @Override
     public ResponseEntity<List<Order>> getAllCancelOrders(String token){
         DataHolder dataHolder=tokenUtility.decode(token);
-        if(dataHolder.getRole().equals("ADMIN")) {
+        if(dataHolder.getRole().equalsIgnoreCase("ADMIN")) {
             List<Order> orders = orderRepository.findByCancel(true);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
@@ -143,7 +143,7 @@ public class OrderService implements OrderServiceInterface{
     @Override
     public ResponseEntity<List<Order>> getAllPlacedOrders(String token){
         DataHolder dataHolder=tokenUtility.decode(token);
-        if(dataHolder.getRole().equals("ADMIN")) {
+        if(dataHolder.getRole().equalsIgnoreCase("ADMIN")) {
             List<Order> orders = orderRepository.findByCancel(false);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }

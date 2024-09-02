@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserServiceInterface {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -36,7 +37,7 @@ public class UserService implements UserServiceInterface {
         String userPassword = loginDTO.getPassword();
         System.out.println(userEmail);
         System.out.println(userPassword);
-        User check = userRepository.findByemailId(userEmail);
+        User check = userRepository.findByEmailId(userEmail);
         System.out.println(check.getUserId());
         if (userEmail.equals(check.getEmailId()) && (userPassword.equals(check.getPassword()))) {
             String token = tokenUtility.getToken(check.getUserId(), check.getRole());

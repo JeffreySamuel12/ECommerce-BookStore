@@ -13,11 +13,10 @@ public interface CartServiceInterface {
 
     public ResponseEntity<String> removeByUserId(String token);
 
-    public ResponseEntity<CartDTO> updateQuantity(String token, long cartId, int quantity);
+    public ResponseEntity<CartDTO> updateQuantity(String token, long cartId, long quantity);
 
     public ResponseEntity<List<CartDTO>> getAllCartItemsForUser(String token);
 
     public ResponseEntity<List<CartDTO>> getAllCartItems(String token);
-
 
 }

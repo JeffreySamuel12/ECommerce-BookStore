@@ -1,8 +1,7 @@
 package com.example.BookStoreApplication.exception;
 
-public class AldreadyAddedException extends RuntimeException {
-    public AldreadyAddedException(String message) {
+public class AlreadyAddedException extends RuntimeException {
+    public AlreadyAddedException(String message) {
         super(message);
     }
-
 }

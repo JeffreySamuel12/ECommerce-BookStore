@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CartDTO {
 
-
     private Long cartId;
     private Long userId;
     private Long bookId;
@@ -19,7 +18,6 @@ public class CartDTO {
     private Double price;
     private Long quantity;
     private Double totalPrice;
-
 
     public Long getCartId() {
         return cartId;

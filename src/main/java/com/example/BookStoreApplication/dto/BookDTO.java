@@ -19,12 +19,12 @@ public class BookDTO {
     private Double bookPrice;
     private Long bookQuantity;
 
-    public Long getId() {
-        return id;
+    public Long getBookId() {
+        return bookId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 
     public @NotBlank(message = "Book Name is required") String getBookName() {
