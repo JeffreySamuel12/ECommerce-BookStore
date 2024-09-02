@@ -136,7 +136,7 @@ public class OrderService implements OrderServiceInterface{
     @Override
     public ResponseEntity<List<Order>> getAllCancelOrdersForUser(String token){
         DataHolder dataHolder=tokenUtility.decode(token);
-        List<Order> orders = orderRepository.findByCancelForUser(dataHolder.getId(),true);
+        List<Order> orders = orderRepository.findByUserIdAndCancel(dataHolder.getId(),true);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
@@ -155,7 +155,7 @@ public class OrderService implements OrderServiceInterface{
     @Override
     public ResponseEntity<List<Order>> getAllPlacedOrdersForUser(String token){
         DataHolder dataHolder=tokenUtility.decode(token);
-        List<Order> orders = orderRepository.findByCancelForUser(dataHolder.getId(),false);
+        List<Order> orders = orderRepository.findByUserIdAndCancel(dataHolder.getId(),false);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }
