@@ -50,7 +50,7 @@ public class CartService implements CartServiceInterface {
         List<Cart> allCart=cartRepository.findAll();
         for (Cart cartOfUserBook :allCart)
         {
-            if (cartOfUserBook.getUser().getUserId().equals(userId) && cartOfUserBook.getBook().getId().equals(bookId))
+            if (cartOfUserBook.getUser().getId().equals(userId) && cartOfUserBook.getBook().getId().equals(bookId))
             {
                 return updateQuantity(token,cartOfUserBook.getCartId(),cartOfUserBook.getQuantity()+1);
             }
@@ -87,7 +87,7 @@ public class CartService implements CartServiceInterface {
             throw new CartIdNotFoundException("Cart items for the user not found..");
         }
         for (Cart items : carts) {
-            if (items.getUser().getUserId() == userId) {
+            if (items.getUser().getId() == userId) {
                 cartRepository.delete(items);
             }
         }
@@ -123,7 +123,7 @@ public class CartService implements CartServiceInterface {
         List<Cart> carts = cartRepository.findAll();
         List<CartDTO> allUser = new ArrayList<>();
         for (Cart items : carts) {
-            if (items.getUser().getUserId().equals(userId)) {
+            if (items.getUser().getId().equals(userId)) {
                 allUser.add(convertEntityToDTO(items));
             }
         }
@@ -149,7 +149,7 @@ public class CartService implements CartServiceInterface {
     private CartDTO convertEntityToDTO(Cart cart) {
         CartDTO cartDTO = new CartDTO();
         cartDTO.setCartId(cart.getCartId());
-        cartDTO.setUserId(cart.getUser().getUserId());
+        cartDTO.setUserId(cart.getUser().getId());
         cartDTO.setBookId(cart.getBook().getId());
         cartDTO.setBookName(cart.getBook().getBookName());
         cartDTO.setAuthor(cart.getBook().getBookAuthor());

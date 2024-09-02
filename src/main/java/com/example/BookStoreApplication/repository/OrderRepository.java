@@ -12,6 +12,4 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     List<Order> findByCancel(boolean cancel);
     List<Order> findByUserIdAndCancel(Long userId, boolean cancel);
 
-    List<Order> findByCancelForUser(Long id, boolean b);
-
 }

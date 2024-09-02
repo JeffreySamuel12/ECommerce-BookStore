@@ -38,9 +38,9 @@ public class UserService implements UserServiceInterface {
         System.out.println(userEmail);
         System.out.println(userPassword);
         User check = userRepository.findByEmailId(userEmail);
-        System.out.println(check.getUserId());
+        System.out.println(check.getId());
         if (userEmail.equals(check.getEmailId()) && (userPassword.equals(check.getPassword()))) {
-            String token = tokenUtility.getToken(check.getUserId(), check.getRole());
+            String token = tokenUtility.getToken(check.getId(), check.getRole());
             return token;
         }
         throw new RuntimeException("User or password invalid!");
@@ -87,7 +87,7 @@ public class UserService implements UserServiceInterface {
 
     public UserDTO convertToDTO(@Valid User user) {
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getUserId());
+        userDTO.setId(user.getId());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
         userDTO.setDob(user.getDob());

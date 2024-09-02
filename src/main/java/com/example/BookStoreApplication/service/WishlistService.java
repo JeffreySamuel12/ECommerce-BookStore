@@ -47,7 +47,7 @@ public class WishlistService implements WishlistServiceInterface{
     {
         WishlistDTO wishlistDTO = new WishlistDTO();
         wishlistDTO.setWishlistId(wishlist.getWishlistId());
-        wishlistDTO.setUserId(wishlist.getUser().getUserId());
+        wishlistDTO.setUserId(wishlist.getUser().getId());
         wishlistDTO.setBookId(wishlist.getBook().getId());
         wishlistDTO.setBookName(wishlist.getBook().getBookName());
         wishlistDTO.setPrice(wishlist.getBook().getBookPrice());
@@ -71,7 +71,7 @@ public class WishlistService implements WishlistServiceInterface{
 
         for(Wishlist item:wishlists)
         {
-            if (item.getUser().getUserId().equals(userId) && item.getBook().getId().equals(bookId) )
+            if (item.getUser().getId().equals(userId) && item.getBook().getId().equals(bookId) )
             {
                 throw new AlreadyAddedException("Already added to wishlist");
             }
@@ -144,7 +144,7 @@ public class WishlistService implements WishlistServiceInterface{
 
         for (Wishlist item: wishlists)
         {
-            if (item.getUser().getUserId()==userId)
+            if (item.getUser().getId()==userId)
             {
                 userWishlist.add(convertWishlistToDTO(item));
             }
