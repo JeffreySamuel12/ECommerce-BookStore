@@ -1,7 +1,6 @@
 package com.example.BookStoreApplication.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Data
@@ -9,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class BookDTO {
-    private Long id;
+    private Long bookId;
 
     @NotBlank(message = "Book Name is required")
     private String bookName;

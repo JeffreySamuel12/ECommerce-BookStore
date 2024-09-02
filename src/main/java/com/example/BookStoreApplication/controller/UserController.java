@@ -3,10 +3,10 @@ package com.example.BookStoreApplication.controller;
 import com.example.BookStoreApplication.dto.LoginDTO;
 import com.example.BookStoreApplication.dto.UserDTO;
 import com.example.BookStoreApplication.model.User;
-import com.example.BookStoreApplication.repository.UserRepository;
 import com.example.BookStoreApplication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class UserController {
         return  userService.registerUser(user);
     }
 
-    @GetMapping
+    @GetMapping("/getUsers")
     public List<UserDTO> getAllUsers(@RequestHeader String token){
         return userService.getAllUsers(token);
     }

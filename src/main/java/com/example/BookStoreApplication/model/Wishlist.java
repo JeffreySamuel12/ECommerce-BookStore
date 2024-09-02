@@ -1,30 +1,26 @@
 package com.example.BookStoreApplication.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+public class Wishlist {
 
-public class Image {
-
-    @Column(name = "image_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long wishlistId;
 
-    private String imageName;
-    private String imageType;
+    @ManyToOne
+    @JoinColumn(name="bookId")
+    private Book book;
 
-    @Lob
-    private byte[] imageData;
-
+    @ManyToOne
+    @JoinColumn(name="userId")
+    private User user;
 
 }

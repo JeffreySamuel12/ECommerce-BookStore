@@ -22,4 +22,39 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<?> UserNotFoundException(UserNotFoundException userNotFoundException) {
+        return new ResponseEntity<>(userNotFoundException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BookNotFoundException.class)
+    public ResponseEntity<?> BookNotFoundException(BookNotFoundException bookNotFoundException){
+        return  new ResponseEntity<>(bookNotFoundException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CartIdNotFoundException.class)
+    public ResponseEntity<?> CartIdNotFoundException(CartIdNotFoundException cartIdNotFoundException){
+        return  new ResponseEntity<>(cartIdNotFoundException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoPermissionFoundException.class)
+    public ResponseEntity<?> NoPermissionFoundException(NoPermissionFoundException noPermissionFoundException){
+        return  new ResponseEntity<>(noPermissionFoundException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AldreadyAddedException.class)
+    public ResponseEntity<?> AldreadyAddedException(AldreadyAddedException aldreadyAddedException){
+        return  new ResponseEntity<>(aldreadyAddedException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExceededStockException.class)
+    public ResponseEntity<?> ExceededStockException(ExceededStockException exceededStockException){
+        return  new ResponseEntity<>(exceededStockException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+
+
+
+
+
 }
