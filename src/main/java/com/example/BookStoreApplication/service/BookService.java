@@ -33,6 +33,7 @@ public class BookService {
 
     public BookDTO updateBook(Long id, BookDTO bookDTO) {
         Book bookDetails = convertToEntity(bookDTO);
+        bookDetails.setId(id); // Ensure the ID is set for update
         Book updatedBook = bookRepository.save(bookDetails);
         return convertToDTO(updatedBook);
     }
@@ -43,7 +44,7 @@ public class BookService {
 
     public BookDTO changeBookQuantity(Long id, int quantity) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
-        book.setBookQuantity(quantity);
+        book.setBookQuantity((long) quantity); // Convert int to Long
         Book updatedBook = bookRepository.save(book);
         return convertToDTO(updatedBook);
     }
@@ -57,7 +58,7 @@ public class BookService {
 
     private BookDTO convertToDTO(Book book) {
         return BookDTO.builder()
-                .id(book.getId())
+                .bookId(book.getId()) // Updated method name
                 .bookName(book.getBookName())
                 .bookAuthor(book.getBookAuthor())
                 .bookDescription(book.getBookDescription())
@@ -69,7 +70,7 @@ public class BookService {
 
     private Book convertToEntity(BookDTO bookDTO) {
         return Book.builder()
-                .id(bookDTO.getId())
+                .id(bookDTO.getBookId()) // Updated method name
                 .bookName(bookDTO.getBookName())
                 .bookAuthor(bookDTO.getBookAuthor())
                 .bookDescription(bookDTO.getBookDescription())
