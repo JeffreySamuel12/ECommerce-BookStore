@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "Select * from users_table where email_id=:userEmail",nativeQuery = true)
+    @Query(value = "Select * from users_table where email_id=:userEmail", nativeQuery = true)
     User findByemailId(String userEmail);
 }
 
